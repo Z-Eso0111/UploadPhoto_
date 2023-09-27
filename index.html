@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resim Yükleme ve İndirme</title>
+    <style>
+        #image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .uploaded-image {
+            max-width: 200px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<input type="file" id="file-input" accept="image/*">
+<div id="image-container"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('file-input');
+        const imageContainer = document.getElementById('image-container');
+
+        fileInput.addEventListener('change', handleFileUpload);
+
+        imageContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('uploaded-image')) {
+                downloadImage(event.target.src);
+            }
+        });
+
+        function handleFileUpload(event) {
+            const files = event.target.files;
+
+            for (const file of files) {
+                if (file.type.startsWith('image/')) {
+                    const imageUrl = URL.createObjectURL(file);
+                    createImageElement(imageUrl);
+                }
+            }
+        }
+
+        function createImageElement(imageUrl) {
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.classList.add('uploaded-image');
+            imageContainer.appendChild(img);
+        }
+
+        function downloadImage(imageUrl) {
+            const a = document.createElement('a');
+            a.href = imageUrl;
+            a.download = 'downloaded_image';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    });
+</script>
+
+</body>
+</html>
